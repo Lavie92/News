@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="#FFBB33"
+        android:gravity="center"
+        android:text="NEWS"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/edtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:hint="Title"
+        android:minHeight="48dp" />
+
+
+    <EditText
+        android:id="@+id/edtUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:hint="Url"
+        android:inputType="text"
+        tools:ignore="TouchTargetSizeCheck" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/edtImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/btnSelectImage"
+            android:hint="Enter image url or choose image"
+            android:minHeight="48dp" />
+
+        <ImageButton
+            android:id="@+id/btnSelectImage"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:contentDescription="@string/app_name"
+            android:src="@android:drawable/ic_menu_gallery" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:backgroundTint="@null"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="#777373"
+            android:text="Clear"/>
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="#58E48B"
+            android:text="Save"
+            android:textColor="#006064"
+            app:backgroundTint="@null" />
+    </LinearLayout>
+</LinearLayout>
