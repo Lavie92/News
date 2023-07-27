@@ -1,5 +1,6 @@
 package com.example.news.models;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 
 import java.util.ArrayList;
@@ -37,10 +38,19 @@ public class News {
     public News() {
     }
 
+    public Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
+
     public News(String title, String url, String imageUrl) {
         this.title = title;
         this.url = url;
         this.imageUrl = imageUrl;
+    }public News(String title, String url, String imageUrl, Bitmap bitmap) {
+        this.title = title;
+        this.url = url;
+        this.imageUrl = imageUrl;
+        this.imageBitmap = bitmap;
     }
 
 
@@ -58,5 +68,9 @@ public class News {
         newsList.add(newsDefault1);
         newsList.add(newsDefault2);
         return newsList;
+    }
+    private Bitmap imageBitmap;
+    public void setImageBitmap(Bitmap bitmap) {
+        this.imageBitmap = bitmap;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.news;
 
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
@@ -28,17 +29,28 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private Uri imageUri;
+    private Bitmap imageBitmap;
+
+    private ActivityResultLauncher<Intent> cameraLauncher;
+    private ActivityResultLauncher<String> galleryLauncher;
     public interface OnItemClickListener {
         void onItemClick(News news);
     }
-    private ActivityResultLauncher cameraLauncher;
-    private ActivityResultLauncher galleryLauncher;
+
     public int CHOOSEPHOTO = 0;
     List<News> newsList;
     NewsAdapter newsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        cameraLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                this::onCameraResult);
+
+        galleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                this::onGalleryResult);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -52,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(News news) {
                 String url = news.getUrl();
-
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(url));
                 startActivity(intent);
@@ -69,48 +80,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showDialog(View v) {
+
         View viewDialog = getLayoutInflater().inflate(R.layout.dialog_news, null);
         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
         builder.setView(viewDialog);
         AlertDialog alert = builder.create();
         alert.show();
-        ImageButton btnSelectImage = viewDialog.findViewById(R.id.btnSelectImage);
-
-        btnSelectImage.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-
-                CharSequence[] options = {"Take photo", "Choose from gallery", "Exit"};
-
-                builder.setItems(options, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        if (options[which].equals("Take photo")) {
-
-                            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                            cameraLauncher.launch(takePhotoIntent);
-
-                        } else if (options[which].equals("Choose from gallery")) {
-
-                            Intent pickPhotoIntent = new Intent(Intent.ACTION_PICK);
-
-                            galleryLauncher.launch(pickPhotoIntent);
-
-                        }
-
-                    }
-
-                });
-
-                // Hiển thị dialog
-                builder.show();
-
-            }
-
+        ImageButton btnSelectedImage = viewDialog.findViewById(R.id.btnSelectImage);
+        btnSelectedImage.setOnClickListener(view -> {
+            showImageSelectDialog();
         });
         viewDialog.findViewById(R.id.btnSave).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,13 +103,51 @@ public class MainActivity extends AppCompatActivity {
                 title = edtTitle.getText().toString();
                 url = edtUrl.getText().toString();
                 imageUrl = edtImage.getText().toString();
-                News news = new News(title, url, imageUrl);
+
+                News news = new News(title, url, imageUri != null ? imageUri.toString() : imageUrl);
+                if (imageUri != null) {
+                    news = new News(title, url, imageUri.toString());
+                } else if (imageBitmap != null) {
+                    news = new News(title, url, null);
+                    news.setImageBitmap(imageBitmap);
+                }
+
                 newsList.add(news);
+
+                // Reset
+                imageUri = null;
+                imageBitmap = null;
+//                imageUrl = edtImage.getText().toString();
+//                News news = new News(title, url, imageUrl);
+//                newsList.add(news);
                 Toast.makeText(viewDialog.getContext(), "thêm dữ liệu thành công",
                         Toast.LENGTH_SHORT).show();
                 alert.dismiss();
             }
         });
+    }
+    private void onCameraResult(ActivityResult result) {
+        if (result.getResultCode() == Activity.RESULT_OK) {
+            Intent data = result.getData();
+            imageBitmap = (Bitmap) data.getExtras().get("data");
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+        }
+    }
+
+    private void onGalleryResult(Uri uri) {
+        imageUri = uri;
+    }
+    private void showImageSelectDialog() {
+
+        new AlertDialog.Builder(this)
+                .setItems(new String[]{"Chụp ảnh", "Chọn ảnh", "Huỷ"}, (dialog, which) -> {
+                    if (which == 0) {
+                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        cameraLauncher.launch(cameraIntent);
+                    } else if (which == 1) {
+                        galleryLauncher.launch("image/*");
+                    }
+                }).show();
     }
 
 }

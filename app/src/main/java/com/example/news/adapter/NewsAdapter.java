@@ -45,9 +45,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher_round)
                 .error(R.mipmap.ic_launcher_round);
-        Glide.with(holder.imgImage)
-                .load(news.getImageUrl())
-                .into(holder.imgImage);
+        if (news.getImageUrl() != null) {
+            Glide.with(holder.imgImage)
+                    .load(news.getImageUrl())
+                    .into(holder.imgImage);
+        }
+        else {
+            holder.imgImage.setImageBitmap(news.getImageBitmap());
+
+        }
+
     }
 
 
