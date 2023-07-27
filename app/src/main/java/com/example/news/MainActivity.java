@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -62,10 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
         newsAdapter = new NewsAdapter(newsList, new NewsAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(News news) {
-                String url = news.getUrl();
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
+            public void onItemClick(News news) {                String url = getIntent().getStringExtra("url");
+
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra("imageUrl", news.getImageUrl());
+                intent.putExtra("imageBitmap", news.getImageBitmap());
+                intent.putExtra("url", news.getUrl());
+
                 startActivity(intent);
             }
         });
@@ -117,9 +121,6 @@ public class MainActivity extends AppCompatActivity {
                 // Reset
                 imageUri = null;
                 imageBitmap = null;
-//                imageUrl = edtImage.getText().toString();
-//                News news = new News(title, url, imageUrl);
-//                newsList.add(news);
                 Toast.makeText(viewDialog.getContext(), "thêm dữ liệu thành công",
                         Toast.LENGTH_SHORT).show();
                 alert.dismiss();

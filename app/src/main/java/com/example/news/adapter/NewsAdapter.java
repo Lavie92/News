@@ -27,6 +27,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     public NewsAdapter(List<News> newsList, MainActivity.OnItemClickListener onItemClickListener) {
     }
+    private OnItemClickListener listener;
 
     @NonNull
     @Override
@@ -36,6 +37,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         View newsView = inflater.inflate(R.layout.item_news, parent, false);
         return new ViewHolder(newsView);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull NewsAdapter.ViewHolder holder, int position) {
@@ -66,7 +68,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     public interface OnItemClickListener {
         void onItemClick(News news);
     }
-    private OnItemClickListener listener;
 
     public NewsAdapter(List<News> list, OnItemClickListener listener) {
         this.newsList = list;
@@ -83,7 +84,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
-
                     listener.onItemClick(newsList.get(position));
                 }
             });
